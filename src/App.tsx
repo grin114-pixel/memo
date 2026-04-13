@@ -673,24 +673,24 @@ function MemoIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <path
-        d="M7.25 4.75h7.5l3.5 3.5v10a2 2 0 0 1-2 2h-9a2 2 0 0 1-2-2v-11.5a2 2 0 0 1 2-2Z"
+        d="M6.2 6.4h11.6a2 2 0 0 1 2 2v7.4a2 2 0 0 1-2 2H10.2l-3.6 2.2V17.8H6.2a2 2 0 0 1-2-2V8.4a2 2 0 0 1 2-2Z"
         fill="currentColor"
-        opacity="0.18"
+        opacity="0.16"
       />
       <path
-        d="M14.75 4.75v3.5h3.5M9 10.5h6M9 13.5h6M9 16.5h4.5"
+        d="M6.2 6.4h11.6a2 2 0 0 1 2 2v7.4a2 2 0 0 1-2 2H10.2l-3.6 2.2V17.8H6.2a2 2 0 0 1-2-2V8.4a2 2 0 0 1 2-2Z"
         fill="none"
         stroke="currentColor"
+        strokeLinejoin="round"
+        strokeWidth="1.7"
+      />
+      <path
+        d="m8.2 12.2 2.1 2.05 5-5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.9"
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeWidth="1.7"
-      />
-      <path
-        d="M7.25 4.75h7.5l3.5 3.5v10a2 2 0 0 1-2 2h-9a2 2 0 0 1-2-2v-11.5a2 2 0 0 1 2-2Z"
-        fill="none"
-        stroke="currentColor"
-        strokeLinejoin="round"
-        strokeWidth="1.7"
       />
     </svg>
   )
