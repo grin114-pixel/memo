@@ -9,6 +9,7 @@ export type Database = {
           title: string
           content: string
           image_urls: string[]
+          is_checked: boolean
           created_at: string
         }
         Insert: {
@@ -16,6 +17,7 @@ export type Database = {
           title: string
           content?: string
           image_urls?: string[]
+          is_checked?: boolean
           created_at?: string
         }
         Update: {
@@ -23,6 +25,7 @@ export type Database = {
           title?: string
           content?: string
           image_urls?: string[]
+          is_checked?: boolean
           created_at?: string
         }
         Relationships: []

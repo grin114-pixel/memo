@@ -6,16 +6,16 @@
     </linearGradient>
   </defs>
   <rect width="256" height="256" rx="64" fill="#e0f4f3" />
-  <rect x="44" y="40" width="168" height="176" rx="32" fill="url(#memoG)" opacity="0.16" />
+  <rect x="36" y="44" width="184" height="168" rx="40" fill="url(#memoG)" opacity="0.14" />
   <path
-    d="M85 56h75l43 43v89c0 12.15-9.85 22-22 22H85c-12.15 0-22-9.85-22-22V78c0-12.15 9.85-22 22-22Z"
+    d="M64 72h128a24 24 0 0 1 24 24v84a24 24 0 0 1-24 24H114l-34 22v-22H64a24 24 0 0 1-24-24V96a24 24 0 0 1 24-24Z"
     fill="none"
     stroke="url(#memoG)"
     stroke-width="16"
     stroke-linejoin="round"
   />
   <path
-    d="M160 56v43h43M96 117h64M96 149h64M96 181h48"
+    d="m84 132 22 22 60-60"
     fill="none"
     stroke="url(#memoG)"
     stroke-width="16"

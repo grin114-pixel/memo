@@ -167,6 +167,51 @@
   gap: 8px;
 }
 
+.memo-card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.memo-check {
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  border: 1px solid rgba(13, 148, 136, 0.25);
+  background: rgba(255, 255, 255, 0.9);
+  color: rgba(13, 148, 136, 0.35);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    transform 0.16s ease,
+    background-color 0.16s ease,
+    color 0.16s ease;
+}
+
+.memo-check svg {
+  width: 16px;
+  height: 16px;
+}
+
+.memo-check:hover {
+  transform: translateY(-1px);
+}
+
+.memo-check--on {
+  background: linear-gradient(135deg, rgba(20, 184, 166, 0.16), rgba(15, 118, 110, 0.08));
+  color: var(--memo-teal);
+  border-color: rgba(13, 148, 136, 0.34);
+}
+
+.memo-check:focus-visible {
+  outline: 3px solid var(--memo-teal-muted);
+  outline-offset: 2px;
+}
+
 .memo-card-title {
   margin: 0;
   font-size: 1rem;
@@ -354,7 +399,8 @@
   inset: 0;
   z-index: 100;
   display: grid;
-  place-items: center;
+  place-items: start center;
+  padding: 18px 0;
   background: rgba(15, 23, 42, 0.32);
   backdrop-filter: blur(4px);
   animation: overlayFadeIn 0.22s ease;
@@ -552,6 +598,7 @@
   position: relative;
   width: min(94vw, 720px);
   max-height: 88dvh;
+  margin-top: 0;
   display: flex;
   flex-direction: column;
   background:
@@ -654,6 +701,36 @@
   flex-direction: column;
   gap: 16px;
   -webkit-overflow-scrolling: touch;
+}
+
+.form-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.check-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(13, 148, 136, 0.22);
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--memo-text);
+  font-weight: 700;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.check-chip input {
+  width: 18px;
+  height: 18px;
+}
+
+.check-chip:focus-within {
+  outline: 3px solid var(--memo-teal-muted);
+  outline-offset: 2px;
 }
 
 .form-title-input {

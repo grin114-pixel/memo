@@ -89,6 +89,7 @@ function App() {
   const viewerTouchStartXRef = useRef<number | null>(null)
 
   const [editingMemoId, setEditingMemoId] = useState<string | null>(null)
+  const [formIsChecked, setFormIsChecked] = useState(false)
   const [formTitle, setFormTitle] = useState('')
   const [formContent, setFormContent] = useState('')
   const [formImageFiles, setFormImageFiles] = useState<File[]>([])
@@ -170,10 +171,17 @@ function App() {
       const supabase = getSupabaseClient()
       const { data, error } = await supabase
         .from('memo_notes')
-        .select('id, title, content, image_urls, created_at')
+        .select('id, title, content, image_urls, is_checked, created_at')
         .order('created_at', { ascending: false })
       if (error) throw error
-      setMemos((data ?? []) as MemoRecord[])
+      const raw = (data ?? []) as MemoRecord[]
+      const sorted = [...raw].sort((a, b) => {
+        if (a.is_checked === b.is_checked) {
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        }
+        return a.is_checked ? -1 : 1
+      })
+      setMemos(sorted)
     } catch (error) {
       setDataError(getErrorMessage(error))
       setMemos([])
@@ -188,6 +196,7 @@ function App() {
 
   function openNew() {
     setEditingMemoId(null)
+    setFormIsChecked(false)
     setFormTitle('')
     setFormContent('')
     setFormImageFiles([])
@@ -199,6 +208,7 @@ function App() {
 
   function openEdit(memo: MemoRecord) {
     setEditingMemoId(memo.id)
+    setFormIsChecked(Boolean(memo.is_checked))
     setFormTitle(memo.title)
     setFormContent(memo.content)
     setFormImageFiles([])
@@ -213,6 +223,33 @@ function App() {
     setFormImagePreviews([])
     setFormImageFiles([])
     setView('list')
+  }
+
+  async function toggleChecked(memo: MemoRecord) {
+    if (!supabaseReady) {
+      setDataError('Supabase 환경 변수가 설정되지 않았어요.')
+      return
+    }
+
+    const next = !memo.is_checked
+    setMemos((prev) => {
+      const updated = prev.map((m) => (m.id === memo.id ? { ...m, is_checked: next } : m))
+      return [...updated].sort((a, b) => {
+        if (a.is_checked === b.is_checked) {
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        }
+        return a.is_checked ? -1 : 1
+      })
+    })
+
+    try {
+      const supabase = getSupabaseClient()
+      const { error } = await supabase.from('memo_notes').update({ is_checked: next }).eq('id', memo.id)
+      if (error) throw error
+    } catch (error) {
+      setDataError(getErrorMessage(error))
+      await loadMemos()
+    }
   }
 
   function handleImageSelect(event: ChangeEvent<HTMLInputElement>) {
@@ -269,13 +306,14 @@ function App() {
           title,
           content: formContent.trim(),
           image_urls: allImageUrls,
+          is_checked: formIsChecked,
         })
         if (error) throw error
         setStatusMessage('메모를 저장했어요.')
       } else if (view === 'edit' && editingMemoId) {
         const { error } = await supabase
           .from('memo_notes')
-          .update({ title, content: formContent.trim(), image_urls: allImageUrls })
+          .update({ title, content: formContent.trim(), image_urls: allImageUrls, is_checked: formIsChecked })
           .eq('id', editingMemoId)
         if (error) throw error
 
@@ -403,6 +441,7 @@ function App() {
                   onEdit={openEdit}
                   onDelete={handleDelete}
                   onOpenImages={openViewer}
+                  onToggleChecked={toggleChecked}
                 />
               ))}
             </div>
@@ -523,14 +562,25 @@ function App() {
             </header>
 
             <div className="form-body">
-              <input
-                className="form-title-input"
-                type="text"
-                placeholder="제목"
-                value={formTitle}
-                onChange={(e) => setFormTitle(e.target.value)}
-                autoFocus
-              />
+              <div className="form-title-row">
+                <label className="check-chip">
+                  <input
+                    type="checkbox"
+                    checked={formIsChecked}
+                    onChange={(e) => setFormIsChecked(e.target.checked)}
+                    aria-label="체크"
+                  />
+                  <span>체크</span>
+                </label>
+                <input
+                  className="form-title-input"
+                  type="text"
+                  placeholder="제목"
+                  value={formTitle}
+                  onChange={(e) => setFormTitle(e.target.value)}
+                  autoFocus
+                />
+              </div>
 
               <textarea
                 ref={contentTextareaRef}
@@ -606,16 +656,27 @@ interface MemoCardProps {
   onEdit: (memo: MemoRecord) => void
   onDelete: (memo: MemoRecord) => Promise<void>
   onOpenImages: (images: string[], index: number) => void
+  onToggleChecked: (memo: MemoRecord) => void
 }
 
-function MemoCard({ memo, onEdit, onDelete, onOpenImages }: MemoCardProps) {
+function MemoCard({ memo, onEdit, onDelete, onOpenImages, onToggleChecked }: MemoCardProps) {
   const shownImages = memo.image_urls.slice(0, CARD_IMAGE_PREVIEW_COUNT)
   const extra = memo.image_urls.length - CARD_IMAGE_PREVIEW_COUNT
 
   return (
     <div className="memo-card">
       <div className="memo-card-body">
-        <h3 className="memo-card-title">{memo.title}</h3>
+        <div className="memo-card-title-row">
+          <button
+            type="button"
+            className={`memo-check${memo.is_checked ? ' memo-check--on' : ''}`}
+            aria-label="체크 토글"
+            onClick={() => onToggleChecked(memo)}
+          >
+            <CheckMiniIcon />
+          </button>
+          <h3 className="memo-card-title">{memo.title}</h3>
+        </div>
         {memo.content ? (
           <p className="memo-card-content">
             <LinkifiedText text={memo.content} />
@@ -803,6 +864,21 @@ function ChevronRightIcon() {
         fill="none"
         stroke="currentColor"
         strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+function CheckMiniIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="m6.5 12.5 3.2 3.1 7.8-7.6"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
