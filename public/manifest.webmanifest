@@ -1,0 +1,17 @@
+{
+  "name": "Memo",
+  "short_name": "Memo",
+  "description": "제목·내용·사진을 함께 저장하는 개인 메모장 앱",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#e0f4f3",
+  "theme_color": "#0f766e",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
