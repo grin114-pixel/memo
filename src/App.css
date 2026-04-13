@@ -703,36 +703,6 @@
   -webkit-overflow-scrolling: touch;
 }
 
-.form-title-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.check-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 12px;
-  border-radius: 16px;
-  border: 1px solid rgba(13, 148, 136, 0.22);
-  background: rgba(255, 255, 255, 0.8);
-  color: var(--memo-text);
-  font-weight: 700;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.check-chip input {
-  width: 18px;
-  height: 18px;
-}
-
-.check-chip:focus-within {
-  outline: 3px solid var(--memo-teal-muted);
-  outline-offset: 2px;
-}
-
 .form-title-input {
   width: 100%;
   border: none;

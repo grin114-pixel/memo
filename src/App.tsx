@@ -562,25 +562,14 @@ function App() {
             </header>
 
             <div className="form-body">
-              <div className="form-title-row">
-                <label className="check-chip">
-                  <input
-                    type="checkbox"
-                    checked={formIsChecked}
-                    onChange={(e) => setFormIsChecked(e.target.checked)}
-                    aria-label="체크"
-                  />
-                  <span>체크</span>
-                </label>
-                <input
-                  className="form-title-input"
-                  type="text"
-                  placeholder="제목"
-                  value={formTitle}
-                  onChange={(e) => setFormTitle(e.target.value)}
-                  autoFocus
-                />
-              </div>
+              <input
+                className="form-title-input"
+                type="text"
+                placeholder="제목"
+                value={formTitle}
+                onChange={(e) => setFormTitle(e.target.value)}
+                autoFocus
+              />
 
               <textarea
                 ref={contentTextareaRef}
