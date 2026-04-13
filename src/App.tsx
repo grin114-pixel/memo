@@ -30,6 +30,52 @@ function formatDateLabel(value: string) {
   }).format(new Date(value))
 }
 
+function LinkifiedText({ text }: { text: string }) {
+  // Very small linkifier for http(s)://... or www....
+  const pattern = /(https?:\/\/[^\s]+|www\.[^\s]+)/g
+  const parts: Array<string | { href: string; label: string }> = []
+
+  let lastIndex = 0
+  for (const match of text.matchAll(pattern)) {
+    const index = match.index ?? 0
+    const raw = match[0] ?? ''
+    if (!raw) continue
+
+    if (index > lastIndex) {
+      parts.push(text.slice(lastIndex, index))
+    }
+
+    const href = raw.startsWith('http') ? raw : `https://${raw}`
+    parts.push({ href, label: raw })
+    lastIndex = index + raw.length
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex))
+  }
+
+  return (
+    <>
+      {parts.map((part, idx) => {
+        if (typeof part === 'string') {
+          return <span key={idx}>{part}</span>
+        }
+        return (
+          <a
+            key={idx}
+            href={part.href}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="memo-link"
+          >
+            {part.label}
+          </a>
+        )
+      })}
+    </>
+  )
+}
+
 function App() {
   const [view, setView] = useState<View>('list')
   const [memos, setMemos] = useState<MemoRecord[]>([])
@@ -570,7 +616,11 @@ function MemoCard({ memo, onEdit, onDelete, onOpenImages }: MemoCardProps) {
     <div className="memo-card">
       <div className="memo-card-body">
         <h3 className="memo-card-title">{memo.title}</h3>
-        {memo.content ? <p className="memo-card-content">{memo.content}</p> : null}
+        {memo.content ? (
+          <p className="memo-card-content">
+            <LinkifiedText text={memo.content} />
+          </p>
+        ) : null}
         {shownImages.length > 0 ? (
           <div className="memo-card-images">
             {shownImages.map((url, idx) => {
